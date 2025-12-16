@@ -1,5 +1,6 @@
 <?php
 session_start();
+require 'db.php'; // database connection
 
 $error = '';
 
@@ -7,10 +8,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    // Identifiants de test
-    if ($username === 'admin' && $password === 'admin123') {
-        $_SESSION['admin'] = true;
-        header('Location: index.php'); // Redirige vers l’admin
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
+    $stmt->execute([$username]);
+    $user = $stmt->fetch();
+
+    if ($user && password_verify($password, $user['password'])) {
+        $_SESSION['admin'] = $user['role'] === 'admin';
+        session_regenerate_id(true); // security
+        header('Location: index.php');
         exit;
     } else {
         $error = "Identifiant ou mot de passe incorrect";

@@ -1,9 +1,13 @@
 <?php
 session_start();
-if (!isset($_SESSION['admin'])) {
+if (!isset($_SESSION['admin']) || !$_SESSION['admin']) {
     header("Location: connexion.php");
     exit;
 }
+require 'db.php';
+
+$stmt = $pdo->query("SELECT * FROM rooms");
+$rooms = $stmt->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -15,25 +19,24 @@ if (!isset($_SESSION['admin'])) {
 </head>
 <body class="admin-body">
 
-<div class="admin-info">
-    Connecté : <strong>Administrateur</strong>
-</div>
+<div class="admin-info">Connecté : <strong>Administrateur</strong></div>
 
 <div class="admin-layout">
-
     <div class="rooms-panel">
         <h3>Salles</h3>
-        <div class="room available selected" onclick="selectRoom(this, 'Salle A')"><span>Salle A</span><div class="actions" onclick="event.stopPropagation()">✏️</div></div>
-        <div class="room occupied" onclick="selectRoom(this, 'Salle B')"><span>Salle B</span><div class="actions" onclick="event.stopPropagation()">✏️</div></div>
-        <div class="room available" onclick="selectRoom(this, 'Salle C')"><span>Salle C</span><div class="actions" onclick="event.stopPropagation()">✏️</div></div>
-        <div class="room occupied" onclick="selectRoom(this, 'Salle D')"><span>Salle D</span><div class="actions" onclick="event.stopPropagation()">✏️</div></div>
+        <?php foreach ($rooms as $room): ?>
+            <div class="room <?= $room['status'] ?>" 
+                 onclick="selectRoom(this, '<?= $room['name'] ?>')">
+                <span><?= htmlspecialchars($room['name']) ?></span>
+                <div class="actions" onclick="event.stopPropagation()">✏️</div>
+            </div>
+        <?php endforeach; ?>
     </div>
 
     <div class="graph-panel">
         <h3 id="graph-title">Salle A - réservations par semaine</h3>
         <canvas id="roomChart"></canvas>
     </div>
-
 </div>
 
 <a href="logout.php" class="logout">Se déconnecter</a>
@@ -42,6 +45,7 @@ if (!isset($_SESSION['admin'])) {
 const ctx = document.getElementById('roomChart');
 let chart;
 
+// Sample reservation data (in real project, fetch from DB)
 const roomData = {
     'Salle A': [2, 3, 6, 1, 4],
     'Salle B': [1, 5, 2, 4, 3],
@@ -57,23 +61,15 @@ function selectRoom(element, room) {
 
 function showGraph(room) {
     document.getElementById('graph-title').innerText = room + " - réservations par semaine";
-
     const data = {
         labels: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'],
-        datasets: [{
-            label: 'Nombre de réservations',
-            data: roomData[room],
-            backgroundColor: '#007BFF'
-        }]
+        datasets: [{ label: 'Nombre de réservations', data: roomData[room], backgroundColor: '#007BFF' }]
     };
-
     if(chart) chart.destroy();
     chart = new Chart(ctx, { type: 'bar', data });
 }
 
-// Affiche le graphique initial
 showGraph('Salle A');
 </script>
-
 </body>
 </html>
