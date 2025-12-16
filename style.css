@@ -1,0 +1,233 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    }
+    
+    
+    .login-container,
+    .admin-container {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    width: 360px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+    
+    
+    h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    }
+    
+    
+    label {
+    display: block;
+    margin-bottom: 5px;
+    }
+    
+    
+    input[type="text"],
+    input[type="password"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    }
+    
+    
+    button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    }
+    
+    
+    button:hover {
+    background-color: #0056b3;
+    }
+    
+    
+    ul {
+    padding-left: 20px;
+    }
+    
+    
+    .logout {
+    display: block;
+    margin-top: 20px;
+    text-align: center;
+    color: #007BFF;
+    text-decoration: none;
+    }
+    
+    
+    .logout:hover {
+    text-decoration: underline;
+    }
+    
+    
+    .error {
+    color: red;
+    text-align: center;
+    margin-bottom: 10px;
+    }
+    
+    
+    .info {
+    margin-top: 15px;
+    font-size: 0.9em;
+    text-align: center;
+    color: #555;
+    }
+
+
+
+.admin-body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f8;
+    margin: 0;
+    padding: 20px;
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+
+
+.admin-info {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 14px;
+    color: #333;
+}
+
+
+
+.admin-layout {
+    display: flex;
+    height: calc(100vh - 80px);
+    gap: 20px;
+}
+
+
+
+.rooms-panel {
+    width: 45%;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    overflow-y: auto;
+}
+
+.rooms-panel h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+
+
+.room {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+    padding: 16px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #fff;
+}
+
+.room span {
+    font-weight: 600;
+}
+
+.room.available {
+    background-color: #2ecc71;
+}
+
+
+.room.occupied {
+    background-color: #f39c12;
+}
+
+.room button {
+    background-color: #ffffff;
+    color: #333;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.room button:hover {
+    background-color: #e6e6e6;
+}
+
+
+.graph-panel {
+    width: 55%;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.graph-panel h3 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+
+.logout {
+    position: absolute;
+    bottom: 20px;
+    right: 30px;
+    text-decoration: none;
+    color: #007BFF;
+    font-size: 14px;
+}
+
+.logout:hover {
+    text-decoration: underline;
+}
+
+.edit-btn {
+    width: auto;
+    padding: 6px 10px;
+    font-size: 12px;
+}
+
+.room.selected {
+    outline: 3px solid #2980b9;
+    transform: scale(1.02);
+}
+
+
+.actions {
+    display: flex;
+    gap: 8px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+
+.room button {
+    width: auto;
+}
