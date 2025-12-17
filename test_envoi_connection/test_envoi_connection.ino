@@ -1,27 +1,19 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
 
-#define BOUTON 14
-#define LED 2
-
 const char* ssid = "WIFI_FOR_ESP32";
 const char* password = "WIFI_FOR_ESP32";
 
 const char* serverName = "http://172.30.102.6:5000/etat_salle";
 
-const char* nomSalle = "C206";
-
-int etatBouton = 0;
-bool etatSalle = false; // True veut dire que la salle est occupée, false veut dire qu'elle est libre
+unsigned long lastTime = 0;
+unsigned long timerDelay = 10000;
 
 void setup() {
   Serial.begin(115200);
   
   WiFi.begin(ssid, password);
   Serial.println("Connecting");
-
-  pinMode(BOUTON, INPUT);
-  pinMode(LED, OUTPUT);
 
   // Pendant la connexion WiFi
   while(WiFi.status() != WL_CONNECTED){
@@ -34,9 +26,7 @@ void setup() {
 }
 
 void loop() {
-  etatBouton = digitalRead(BOUTON);
-
-  if(etatBouton == HIGH){
+  if((millis() - lastTime) > timerDelay){
     if(WiFi.status() == WL_CONNECTED){
       WiFiClient client;
       HTTPClient http;
@@ -44,16 +34,7 @@ void loop() {
       http.begin(client, serverName);
 
       http.addHeader("Content-Type", "application/json");
-
-      String httpRequestData;
-      if(etatSalle == false){ // Salle libre
-        digitalWrite(LED, LOW);
-        httpRequestData = "{\"etat\": 0, \"nom\": \"" + String(nomSalle) + "\"}";
-      }else{ // Salle occupée
-        digitalWrite(LED, HIGH);
-        httpRequestData = "{\"etat\": 1, \"nom\": \"" + String(nomSalle) + "\"}";
-      }
-      etatSalle = !etatSalle;
+      String httpRequestData = "{\"etat\": false}";
 
       int httpResponseCode = http.POST(httpRequestData);
 
@@ -65,7 +46,6 @@ void loop() {
     else{ // Si le WiFi est déconnecté
       Serial.println("WiFi Déconnecté");
     }
-    delay(5000); // C'est normalement mauvais de mettre un délai comme ça, même en faisant pas attention à quand le bouton est maintenu.
-    // Mais ici on peut, car on peut se dire que le bouton va être appuyé toutes les 30 minutes, donc ça pose pas vraiment problème.
+    lastTime = millis();
   }
 }

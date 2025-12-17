@@ -1,8 +1,8 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
 
-const char ssid = "WIFI_FOR_ESP32"
-const char password = "WIFI_FOR_ESP32"
+const char* ssid = "WIFI_FOR_ESP32";
+const char* password = "WIFI_FOR_ESP32";
 
 // const char serverName = ""
 
@@ -18,7 +18,8 @@ void setup() {
     Serial.print(".");
   }
 
-  Serial.print("\nConnected to WiFi network with IP Address : " + WiFi.localIP());
+  Serial.print("Connected to WiFi network with IP Address.");
+  Serial.println(WiFi.localIP());
 }
 
 void loop() {
