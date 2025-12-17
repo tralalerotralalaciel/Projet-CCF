@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <h2>Connexion Administrateur</h2>
 
     <?php if($error): ?>
-        <p class="error"><?= $error ?></p>
+        <p class="error"><?= htmlspecialchars($error) ?></p>
     <?php endif; ?>
 
     <form method="post">
@@ -47,7 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button type="submit">Se connecter</button>
     </form>
 
-    
     <p class="info">Accès réservé à l'administrateur</p>
 </div>
 </body>
