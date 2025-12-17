@@ -4,10 +4,12 @@ if (!isset($_SESSION['admin']) || !$_SESSION['admin']) {
     header("Location: connexion.php");
     exit;
 }
+
 require 'db.php';
 
-$stmt = $pdo->query("SELECT * FROM rooms");
-$rooms = $stmt->fetchAll();
+// Récupération des salles depuis la table salle
+$stmt = $pdo->query("SELECT * FROM salle");
+$salles = $stmt->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -24,17 +26,20 @@ $rooms = $stmt->fetchAll();
 <div class="admin-layout">
     <div class="rooms-panel">
         <h3>Salles</h3>
-        <?php foreach ($rooms as $room): ?>
-            <div class="room <?= $room['status'] ?>" 
-                 onclick="selectRoom(this, '<?= $room['name'] ?>')">
-                <span><?= htmlspecialchars($room['name']) ?></span>
-                <div class="actions" onclick="event.stopPropagation()">✏️</div>
+
+        <?php foreach ($salles as $salle): ?>
+            <div class="room <?= htmlspecialchars($salle['etat']) ?>"
+                 onclick="selectRoom(this, '<?= htmlspecialchars($salle['nom']) ?>')">
+
+                <span><?= htmlspecialchars($salle['nom']) ?></span>
+                <div class="actions">✏️</div>
             </div>
         <?php endforeach; ?>
+
     </div>
 
     <div class="graph-panel">
-        <h3 id="graph-title">Salle A - réservations par semaine</h3>
+        <h3 id="graph-title">Sélectionnez une salle</h3>
         <canvas id="roomChart"></canvas>
     </div>
 </div>
@@ -45,7 +50,7 @@ $rooms = $stmt->fetchAll();
 const ctx = document.getElementById('roomChart');
 let chart;
 
-// Sample reservation data (in real project, fetch from DB)
+// Données simulées (prototype)
 const roomData = {
     'Salle A': [2, 3, 6, 1, 4],
     'Salle B': [1, 5, 2, 4, 3],
@@ -60,16 +65,22 @@ function selectRoom(element, room) {
 }
 
 function showGraph(room) {
-    document.getElementById('graph-title').innerText = room + " - réservations par semaine";
+    document.getElementById('graph-title').innerText =
+        room + " - occupation hebdomadaire";
+
     const data = {
         labels: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'],
-        datasets: [{ label: 'Nombre de réservations', data: roomData[room], backgroundColor: '#007BFF' }]
+        datasets: [{
+            label: 'Nombre d’occupations',
+            data: roomData[room] || [],
+            backgroundColor: '#007BFF'
+        }]
     };
-    if(chart) chart.destroy();
+
+    if (chart) chart.destroy();
     chart = new Chart(ctx, { type: 'bar', data });
 }
-
-showGraph('Salle A');
 </script>
+
 </body>
 </html>

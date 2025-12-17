@@ -1,6 +1,6 @@
 <?php
 $host = 'localhost';
-$db   = 'room_management';
+$db   = 'projet_salle';
 $user = 'root';
 $pass = '';
 $charset = 'utf8mb4';
@@ -13,7 +13,6 @@ $options = [
 
 try {
     $pdo = new PDO($dsn, $user, $pass, $options);
-} catch (\PDOException $e) {
-    die("Database connection failed: " . $e->getMessage());
+} catch (PDOException $e) {
+    die("Erreur connexion BDD : " . $e->getMessage());
 }
-?>

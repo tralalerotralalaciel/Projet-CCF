@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'db.php'; // database connection
+require 'db.php';
 
 $error = '';
 
@@ -8,13 +8,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
+    $stmt = $pdo->prepare("SELECT * FROM admin WHERE username = ?");
     $stmt->execute([$username]);
-    $user = $stmt->fetch();
+    $admin = $stmt->fetch();
 
-    if ($user && password_verify($password, $user['password'])) {
-        $_SESSION['admin'] = $user['role'] === 'admin';
-        session_regenerate_id(true); // security
+    if ($admin && $password === $admin['password']) {
+        $_SESSION['admin'] = true;
+        session_regenerate_id(true);
         header('Location: index.php');
         exit;
     } else {
