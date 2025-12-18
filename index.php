@@ -1,37 +1,53 @@
+# index.php
+```php
 <?php
 session_start();
-if (!isset($_SESSION['admin']) || !$_SESSION['admin']) {
-    header("Location: connexion.php");
-    exit;
-}
-
 require 'db.php';
 
-$stmt = $pdo->query("SELECT * FROM salle");
-$salles = $stmt->fetchAll();
-?>
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<title>Administration</title>
-<link rel="stylesheet" href="style.css">
-</head>
-<body class="admin-body">
+$isAdmin = isset($_SESSION['admin']) && $_SESSION['admin'] === true;
 
-<div class="admin-info">Connecté : <strong>Administrateur</strong></div>
+/* =====================
+   TRAITEMENT ADMIN
+===================== */
+if ($isAdmin && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
-<div class="rooms-panel">
-    <h3>Liste des Salles</h3>
-    <?php foreach ($salles as $salle): ?>
-        <div class="room <?= htmlspecialchars($salle['etat']) ?>">
-            <span><?= htmlspecialchars($salle['nom']) ?></span>
-            <div class="actions">✏️</div>
-        </div>
-    <?php endforeach; ?>
-</div>
+    // UPDATE
+    if (isset($_POST['update'])) {
+        $stmt = $pdo->prepare(
+            "UPDATE salle SET nom = ?, etat = ? WHERE id_salle = ?"
+        );
+        $stmt->execute([
+            trim($_POST['nom']),
+            (int)$_POST['etat'],
+            (int)$_POST['id_salle']
+        ]);
 
-<a href="logout.php" class="logout">Se déconnecter</a>
+        $stmt = $pdo->prepare(
+            "INSERT INTO historique (id_salle, date_heure)
+             VALUES (?, NOW())"
+        );
+        $stmt->execute([(int)$_POST['id_salle']]);
 
-</body>
-</html>
+        header('Location: index.php');
+        exit;
+    }
+
+    // DELETE
+    if (isset($_POST['delete'])) {
+        $stmt = $pdo->prepare("DELETE FROM salle WHERE id_salle = ?");
+        $stmt->execute([(int)$_POST['id_salle']]);
+        header('Location: index.php');
+        exit;
+    }
+
+    // CREATE ou UPDATE par nom
+    if (isset($_POST['create'])) {
+        $nom  = trim($_POST['nom']);
+        $etat = (int)$_POST['etat'];
+
+        $stmt = $pdo->prepare("SELECT id_salle FROM salle WHERE nom = ?");
+        $stmt->execute([$nom]);
+        $exist = $stmt->fetch();
+
+        if ($exist) {
+```
