@@ -7,7 +7,7 @@
 const char* ssid = "WIFI_FOR_ESP32";
 const char* password = "WIFI_FOR_ESP32";
 
-const char* serverName = "http://172.30.102.6:5000/etat_salle";
+const char* serverName = "http://172.30.103.68/web/etat_salle.php";
 
 const char* nomSalle = "C206";
 
