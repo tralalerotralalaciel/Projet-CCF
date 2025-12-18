@@ -1,8 +1,8 @@
 <?php
 $host = 'localhost';
 $db   = 'projet_salle';
-$user = 'root';
-$pass = '';
+$user = 'phpmyadmin';
+$pass = '****';
 $charset = 'utf8mb4';
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
