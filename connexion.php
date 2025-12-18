@@ -5,13 +5,17 @@ require 'db.php';
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = $_POST['username'];
+
+    // Sécurisation basique des entrées
+    $username = trim($_POST['username']);
     $password = $_POST['password'];
 
+    // Récupération de l'admin
     $stmt = $pdo->prepare("SELECT * FROM admin WHERE username = ?");
     $stmt->execute([$username]);
     $admin = $stmt->fetch();
 
+    // Vérification simple (mot de passe en clair)
     if ($admin && $password === $admin['password']) {
         $_SESSION['admin'] = true;
         session_regenerate_id(true);
@@ -30,10 +34,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
 <div class="login-container">
     <h2>Connexion Administrateur</h2>
 
-    <?php if($error): ?>
+    <?php if ($error): ?>
         <p class="error"><?= htmlspecialchars($error) ?></p>
     <?php endif; ?>
 
@@ -47,7 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button type="submit">Se connecter</button>
     </form>
 
-    <p class="info">Accès réservé à l'administrateur</p>
+    <p class="info">Accès réservé à l’administrateur</p>
 </div>
+
 </body>
 </html>
