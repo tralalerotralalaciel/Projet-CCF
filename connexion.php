@@ -51,6 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <button type="submit">Se connecter</button>
     </form>
+<br>
+<center><a href="index.php" id="return">Voir les valeurs sans connexion</a></center>
 
     <p class="info">Accès réservé à l’administrateur</p>
 </div>
